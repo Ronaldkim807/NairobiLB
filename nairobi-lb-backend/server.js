@@ -20,15 +20,15 @@ const app = express();
 /* ================= MIDDLEWARE ================= */
 app.use(helmet());
 
+// Allowed origins from environment or fallback
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://nairobi-lb-frontend.vercel.app'
+  process.env.FRONTEND_URL || 'https://nairobi-lb-frontend.vercel.app',
+  'http://localhost:3000'
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (like Postman, curl)
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // allow Postman, curl
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = `CORS policy: The origin ${origin} is not allowed`;
       return callback(new Error(msg), false);
@@ -95,8 +95,8 @@ app.listen(PORT, () => {
   console.log(`🚀 NairobiLB Backend running on port ${PORT}`);
 
   // ================= KEEP FREE RENDER AWAKE =================
-  if (process.env.NODE_ENV === 'production') {
-    const pingUrl = process.env.FRONTEND_URL || 'https://nairobi-lb-frontend.vercel.app';
+  if (process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL) {
+    const pingUrl = process.env.FRONTEND_URL;
     setInterval(async () => {
       try {
         await fetch(pingUrl);
