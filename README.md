@@ -165,4 +165,4 @@ This project is licensed under the ISC License.
 
 ## Contact
 
-For support or inquiries, email support@nairobiLB.co.ke.
+For support or inquiries, email kimutaironald48@gmail.com.
