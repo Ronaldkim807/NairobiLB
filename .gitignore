@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+nairobi-lb-backend/node_modules/
+nairobi-lb-frontend/node_modules/
+
+# Environment variables
+.env
+nairobi-lb-backend/.env
+nairobi-lb-frontend/.env
+
+# Build
+nairobi-lb-frontend/build/
+nairobi-lb-frontend/dist/
+
+# Prisma
+nairobi-lb-backend/prisma/dev.db
+
+# Logs
+npm-debug.log*

@@ -1,0 +1,148 @@
+// ================================
+// Prisma Configuration
+// ================================
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ================================
+// User Model
+// ================================
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String?
+  role      UserRole  @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  organizedEvents Event[]     @relation("UserEvents")
+  bookings        Booking[]
+  payments        Payment[]
+
+  @@map("users")
+}
+
+// ================================
+// Event Model
+// ================================
+model Event {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  category    String
+  venue       String
+  address     String?
+  city        String?
+  startTime   DateTime
+  endTime     DateTime
+  capacity    Int
+  imageUrl    String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  organizerId String
+  organizer   User        @relation("UserEvents", fields: [organizerId], references: [id])
+  ticketTypes TicketType[]
+  bookings    Booking[]
+
+  @@map("events")
+}
+
+// ================================
+// Ticket Type Model
+// ================================
+model TicketType {
+  id        String   @id @default(uuid())
+  name      String
+  price     Decimal  @db.Decimal(10, 2)
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  // Relations
+  eventId   String
+  event     Event     @relation(fields: [eventId], references: [id])
+  bookings  Booking[]
+
+  @@map("ticket_types")
+}
+
+// ================================
+// Booking Model
+// ================================
+model Booking {
+  id                String         @id @default(uuid())
+  bookingReference  String?        @unique @default(uuid())
+  quantity          Int
+  status            BookingStatus  @default(PENDING)
+  totalAmount       Decimal        @db.Decimal(10, 2)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  // Relations
+  userId            String
+  eventId           String
+  ticketTypeId      String
+
+  user              User       @relation(fields: [userId], references: [id])
+  event             Event      @relation(fields: [eventId], references: [id])
+  ticketType        TicketType @relation(fields: [ticketTypeId], references: [id])
+  payments          Payment[]
+
+  @@map("bookings")
+}
+
+// ================================
+// Payment Model
+// ================================
+model Payment {
+  id           String        @id @default(uuid())
+  amount       Decimal       @db.Decimal(10, 2)
+  provider     String
+  providerRef  String?
+  phoneNumber  String?
+  status       PaymentStatus @default(PENDING)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relations
+  bookingId    String
+  userId       String?
+
+  booking      Booking    @relation(fields: [bookingId], references: [id])
+  user         User?      @relation(fields: [userId], references: [id])
+
+  @@map("payments")
+}
+
+// ================================
+// Enums
+// ================================
+enum UserRole {
+  ADMIN
+  ORGANIZER
+  USER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}

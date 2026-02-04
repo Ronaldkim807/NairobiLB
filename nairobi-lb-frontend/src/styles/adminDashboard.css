@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+.admin-shell {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.admin-mono {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+}
+
+.admin-hero {
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(59, 130, 246, 0.25), transparent 60%),
+    radial-gradient(900px 420px at 85% 0%, rgba(16, 185, 129, 0.22), transparent 60%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.admin-card {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.9));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 22px 40px rgba(2, 6, 23, 0.45);
+}
+
+.admin-pill {
+  background: rgba(59, 130, 246, 0.18);
+  color: #93c5fd;
+}
+
+.admin-table th {
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.admin-table tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.admin-table tr:hover {
+  background: rgba(59, 130, 246, 0.08);
+}

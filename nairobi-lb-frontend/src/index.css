@@ -1,0 +1,93 @@
+
+
+/* Global background and text colors */
+body {
+  background-color: #0a0a0a; /* Modern deep black */
+  color: #e5e7eb; /* Light gray text for readability */
+  font-family: 'Inter', sans-serif; /* Modern clean font */
+  margin: 0;
+  padding: 0;
+}
+
+:root[data-theme='light'] body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* Scrollbar styling for modern dark theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a; /* Darker track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563; /* Dark gray thumb */
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280; /* Lighter gray on hover */
+}
+
+/* Links styling for dark mode */
+a {
+  color: #60a5fa; /* Soft blue link */
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #3b82f6; /* Brighter blue on hover */
+}
+
+:root[data-theme='light'] a {
+  color: #2563eb;
+}
+
+:root[data-theme='light'] a:hover {
+  color: #1d4ed8;
+}
+
+/* Buttons styling for dark theme */
+button {
+  background-color: #1f2937; /* Dark button background */
+  color: #f9fafb; /* Light text */
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #374151; /* Slightly lighter on hover */
+}
+
+/* Optional: input fields */
+input, textarea, select {
+  background-color: #1f2937;
+  color: #f9fafb;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Light mode overrides for common dark utility classes */
+:root[data-theme='light'] .bg-black { background-color: #f8fafc !important; }
+:root[data-theme='light'] .bg-gray-900 { background-color: #f1f5f9 !important; }
+:root[data-theme='light'] .bg-gray-800 { background-color: #ffffff !important; }
+:root[data-theme='light'] .bg-gray-700 { background-color: #e2e8f0 !important; }
+:root[data-theme='light'] .text-white { color: #0f172a !important; }
+:root[data-theme='light'] .text-gray-400 { color: #475569 !important; }
+:root[data-theme='light'] .text-gray-300 { color: #334155 !important; }
+:root[data-theme='light'] .border-gray-700 { border-color: #e2e8f0 !important; }
+:root[data-theme='light'] .border-gray-600 { border-color: #cbd5f5 !important; }
