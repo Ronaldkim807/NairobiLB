@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import fetch from 'node-fetch'; // For keep-alive ping
 
 // Routes
 import authRoutes from './routes/auth.js';
@@ -18,10 +19,25 @@ const app = express();
 
 /* ================= MIDDLEWARE ================= */
 app.use(helmet());
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://nairobi-lb-frontend.vercel.app'
+];
+
 app.use(cors({
-  origin: ['http://localhost:3000'], // frontend
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like Postman, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `CORS policy: The origin ${origin} is not allowed`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,17 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/chatbot', chatbotRoutes);
-
-// ✅ Organizer routes
 app.use('/api/organizer', organizerRoutes);
-/**
- * Routes:
- * GET  /api/organizer/analytics
- * GET  /api/organizer/tickets
- * GET  /api/organizer/revenue
- */
-
-// ✅ Bookings and Payments routes
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 
@@ -54,7 +60,6 @@ app.get('/api/health', (req, res) => {
 });
 
 /* ================= 403 HANDLER ================= */
-// Middleware to catch forbidden errors
 app.use((err, req, res, next) => {
   if (err.status === 403) {
     return res.status(403).json({
@@ -68,7 +73,6 @@ app.use((err, req, res, next) => {
 /* ================= ERROR HANDLING ================= */
 app.use((err, req, res, next) => {
   console.error('❌ Server Error:', err);
-
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',
@@ -88,5 +92,18 @@ app.use('*', (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 NairobiLB Backend running on http://localhost:${PORT}`);
+  console.log(`🚀 NairobiLB Backend running on port ${PORT}`);
+
+  // ================= KEEP FREE RENDER AWAKE =================
+  if (process.env.NODE_ENV === 'production') {
+    const pingUrl = process.env.FRONTEND_URL || 'https://nairobi-lb-frontend.vercel.app';
+    setInterval(async () => {
+      try {
+        await fetch(pingUrl);
+        console.log('🌙 Keep-alive ping sent to frontend to prevent sleeping');
+      } catch (err) {
+        console.error('❌ Keep-alive ping failed:', err.message);
+      }
+    }, 14 * 60 * 1000); // every 14 minutes
+  }
 });
